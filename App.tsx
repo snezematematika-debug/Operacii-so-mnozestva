@@ -3,7 +3,7 @@ import { Book } from './components/Book';
 import { VennDiagram, getVennRegion } from './components/VennDiagram';
 import { DrawingCanvas } from './components/DrawingCanvas';
 import { getMathHint } from './services/geminiService';
-import { CheckCircle, Undo2, Check, X, Smartphone, Trophy, MessageCircle } from 'lucide-react';
+import { CheckCircle, Undo2, Check, X } from 'lucide-react';
 
 export default function App() {
   // --- MathJax Re-render Hook ---

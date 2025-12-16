@@ -32,7 +32,8 @@ export const Book: React.FC<BookProps> = ({ pages }) => {
   };
 
   return (
-    <div className="relative w-full max-w-6xl h-[600px] perspective-2000 mx-auto my-8 flex justify-center items-center">
+    // Added style={{ height: '600px' }} to ensure it takes space even if Tailwind fails
+    <div className="relative w-full max-w-6xl perspective-2000 mx-auto my-8 flex justify-center items-center" style={{ height: '600px' }}>
        
        {/* Book Container */}
        <div className="relative w-full h-full flex justify-center">
@@ -68,7 +69,8 @@ export const Book: React.FC<BookProps> = ({ pages }) => {
                  }}
                >
                  {/* FRONT FACE (Visible when sheet is on the Right) */}
-                 <div className={`absolute inset-0 backface-hidden overflow-hidden rounded-r-xl shadow-book bg-white border-l-4 border-zinc-300 ${!isFlipped ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                 {/* Replaced shadow-book with standard shadow-2xl */}
+                 <div className={`absolute inset-0 backface-hidden overflow-hidden rounded-r-xl shadow-2xl bg-white border-l-4 border-zinc-300 ${!isFlipped ? 'pointer-events-auto' : 'pointer-events-none'}`}>
                    <PaperBackground>
                       {sheet.front}
                       <div className="absolute bottom-4 right-6 text-gray-400 font-handwriting text-sm">
@@ -79,7 +81,7 @@ export const Book: React.FC<BookProps> = ({ pages }) => {
 
                  {/* BACK FACE (Visible when sheet is on the Left) */}
                  <div 
-                    className={`absolute inset-0 backface-hidden overflow-hidden rounded-l-xl shadow-book bg-paper border-r-4 border-zinc-300 rotate-y-180 ${isFlipped ? 'pointer-events-auto' : 'pointer-events-none'}`}
+                    className={`absolute inset-0 backface-hidden overflow-hidden rounded-l-xl shadow-2xl bg-[#fdfbf7] border-r-4 border-zinc-300 rotate-y-180 ${isFlipped ? 'pointer-events-auto' : 'pointer-events-none'}`}
                  >
                     <PaperBackground className="">
                       {/* Render the next page content */}
