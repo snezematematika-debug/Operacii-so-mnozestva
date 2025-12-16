@@ -1,13 +1,22 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const getMathHint = async (
   problemContext: string,
   userAnswer: string,
   correctAnswer: string
 ): Promise<string> => {
   try {
+    // CRITICAL FIX: Initialize client ONLY when needed, not at module level.
+    // This prevents the app from crashing on startup if the API key is missing.
+    const apiKey = process.env.API_KEY;
+    
+    if (!apiKey) {
+      console.warn("Gemini API Key is missing. Check your .env file or Vercel settings.");
+      // Return a graceful fallback message instead of crashing
+      return "Наставникот моментално не е достапен (недостасува API клуч). Обиди се да ја решиш задачата самостојно.";
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
     const model = 'gemini-2.5-flash';
     
     const prompt = `
