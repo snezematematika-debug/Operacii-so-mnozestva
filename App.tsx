@@ -3,15 +3,23 @@ import { Book } from './components/Book';
 import { VennDiagram, getVennRegion } from './components/VennDiagram';
 import { DrawingCanvas } from './components/DrawingCanvas';
 import { getMathHint } from './services/geminiService';
-import { CheckCircle, Undo2, Check, X } from 'lucide-react';
+import { CheckCircle, Undo2, Check, X, BookOpen, Calculator, Brain } from 'lucide-react';
 
 export default function App() {
+  // --- Global State ---
+  const [hasStarted, setHasStarted] = useState(false);
+
   // --- MathJax Re-render Hook ---
   useEffect(() => {
     if ((window as any).MathJax) {
+      // Small timeout to ensure DOM is ready
       setTimeout(() => {
-        (window as any).MathJax.typesetPromise();
-      }, 0);
+        try {
+          (window as any).MathJax.typesetPromise();
+        } catch(e) {
+          console.error("MathJax error:", e);
+        }
+      }, 100);
     }
   });
 
@@ -390,6 +398,10 @@ export default function App() {
       </div>
     </div>
   );
+
+  // ... (Other pages are defined here in the same way as previous code)
+  // For brevity in this answer, imagine Page2 through Page10 here are identical to previous version.
+  // I will include them in the render logic below.
 
   const Page2 = (
     <div className="flex flex-col h-full">
@@ -1138,18 +1150,93 @@ export default function App() {
     </div>
   );
 
+  // --- INTRO SCREEN (HOME PAGE) ---
+  if (!hasStarted) {
+    return (
+      <div className="min-h-screen bg-[#e6d5b8] flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700">
+         <div className="max-w-md w-full bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border-4 border-white ring-4 ring-indigo-100 flex flex-col items-center gap-6">
+            
+            <div className="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg text-white mb-2">
+               <BookOpen size={48} />
+            </div>
+
+            <div>
+              <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Интерактивна Тетратка</h1>
+              <h2 className="text-xl font-bold text-indigo-600 uppercase tracking-wider">Операции со Множества</h2>
+            </div>
+
+            <p className="text-slate-600 text-lg leading-relaxed">
+               Добредојдовте! Оваа тетратка содржи 10 интерактивни задачи кои ќе ви помогнат да ги совладате пресекот, унијата и разликата на множества преку вежби и Венови дијаграми.
+            </p>
+
+            <div className="flex gap-4 justify-center text-slate-500 text-sm mb-2">
+               <div className="flex flex-col items-center gap-1">
+                  <Calculator size={20} className="text-indigo-400" />
+                  <span>Пресметки</span>
+               </div>
+               <div className="flex flex-col items-center gap-1">
+                  <Brain size={20} className="text-indigo-400" />
+                  <span>Логика</span>
+               </div>
+            </div>
+
+            <button 
+              onClick={() => setHasStarted(true)}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-bold py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+            >
+              Отвори Тетратка <ChevronRight size={24} strokeWidth={3} />
+            </button>
+            
+            <div className="text-xs text-slate-400 mt-2">
+               VI/VII Одделение • Математика
+            </div>
+         </div>
+      </div>
+    );
+  }
+
+  // --- MAIN APP (BOOK) ---
   return (
-    <div className="min-h-screen bg-[#e6d5b8] py-4 px-4 font-sans text-slate-900 flex flex-col items-center">
-      <div className="max-w-4xl w-full text-center">
-        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Работна Тетратка</h1>
-        <p className="text-slate-600">Тема: Множества</p>
+    <div className="min-h-screen bg-[#e6d5b8] py-4 px-4 font-sans text-slate-900 flex flex-col items-center animate-in fade-in duration-500">
+      <div className="max-w-4xl w-full flex items-center justify-between mb-4 px-4">
+        <button 
+           onClick={() => setHasStarted(false)}
+           className="text-slate-500 hover:text-indigo-600 transition-colors flex items-center gap-1 text-sm font-bold"
+        >
+           <Undo2 size={18} /> Назад кон почеток
+        </button>
+        <div className="text-center">
+          <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Работна Тетратка</h1>
+          <p className="text-slate-600 text-sm">Тема: Множества</p>
+        </div>
+        <div className="w-24"></div> {/* Spacer for centering */}
       </div>
 
       <Book pages={[Page1, Page2, Page3, Page4, Page5, Page6, Page7, Page8, Page9, Page10]} />
       
-      <div className="text-center text-slate-600 text-xs mt-4">
+      <div className="text-center text-slate-500 text-xs mt-8">
         Powered by React, Tailwind & Gemini AI
       </div>
     </div>
+  );
+}
+
+// Chevron icon for the start button
+function ChevronRight({ size = 24, strokeWidth = 2, className = "" }) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth={strokeWidth} 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="m9 18 6-6-6-6"/>
+    </svg>
   );
 }
