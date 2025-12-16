@@ -8,18 +8,19 @@ import { CheckCircle, Undo2, Check, X } from 'lucide-react';
 
 export default function App() {
   // --- Global State ---
-  // Default to false ensures Welcome Screen is always first
+  // Default to false ensures Welcome Screen (The Notebook Cover) is always first
   const [hasStarted, setHasStarted] = useState(false);
 
   // --- MathJax Re-render Hook ---
   useEffect(() => {
-    if ((window as any).MathJax) {
-      // Small timeout to ensure DOM is ready
+    // Only attempt MathJax if the window object exists (client-side)
+    if (typeof window !== 'undefined' && (window as any).MathJax) {
       setTimeout(() => {
         try {
-          // Check if typesetting is needed to avoid errors
           if ((window as any).MathJax.typesetPromise) {
-            (window as any).MathJax.typesetPromise().catch((err: any) => console.log('MathJax typeset failed (expected during navigation):', err));
+            (window as any).MathJax.typesetPromise().catch((err: any) => 
+              console.debug('MathJax typeset deferred:', err)
+            );
           }
         } catch(e) {
           console.error("MathJax error:", e);
